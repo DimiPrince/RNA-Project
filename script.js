@@ -84,13 +84,8 @@ function reconstruct() {
         return;
     }
 
-    var gEnzymeFragments = gEnzymeInput.split(", ");
-    var ucEnzymeFragments = ucEnzymeInput.split(", ");
-
-    if (gEnzymeFragments.some(fragment => typeof fragment !== 'string') || ucEnzymeFragments.some(fragment => typeof fragment !== 'string')) {
-        alert("Please enter fragments separated by commas and spaces.");
-        return;
-    }
+    var gEnzymeFragments = gEnzymeInput.split(", ").map(fragment => fragment.split(" "));
+    var ucEnzymeFragments = ucEnzymeInput.split(", ").map(fragment => fragment.split(" "));
 
     var reconstructedRNA = reconstructRNA(gEnzymeFragments, ucEnzymeFragments);
 
@@ -101,6 +96,7 @@ function reconstruct() {
         outputDiv.innerHTML = "Error: No Eulerian path exists. Please check your input.";
     }
 }
+
 
 function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
     const eulerianPathFinder = new EulerianPath();
