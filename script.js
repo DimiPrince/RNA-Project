@@ -99,16 +99,24 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
 
     // Constructing the multigraph
     G_enzyme_fragments.forEach(fragment => {
-        const bases = fragment.split(' ');
-        for (let i = 0; i < bases.length - 1; i++) {
-            eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
+        if (typeof fragment === 'string' || fragment instanceof String) {
+            const bases = fragment.split(' ');
+            for (let i = 0; i < bases.length - 1; i++) {
+                eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
+            }
+        } else {
+            console.error('fragment is not a string:', fragment);
         }
     });
 
     UC_enzyme_fragments.forEach(fragment => {
-        const bases = fragment.split(' ');
-        for (let i = 0; i < bases.length - 1; i++) {
-            eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
+        if (typeof fragment === 'string' || fragment instanceof String) {
+            const bases = fragment.split(' ');
+            for (let i = 0; i < bases.length - 1; i++) {
+                eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
+            }
+        } else {
+            console.error('fragment is not a string:', fragment);
         }
     });
 
