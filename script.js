@@ -11,21 +11,6 @@ class EulerianPath {
         this.graph.get(src).push(dest);
     }
 
-    dfs(node) {
-        console.log("Visiting node:", node);
-        if (!this.graph.has(node)) {
-            console.error('Node does not exist in the graph:', node);
-            return;
-        }
-    
-        while (this.graph.get(node).length > 0) {
-            const nextNode = this.graph.get(node).shift();
-            console.log("Next node:", nextNode);
-            this.dfs(nextNode);
-        }
-        this.path.push(node);
-    }
-
     findEulerianPath() {
         const inDegree = new Map();
         const outDegree = new Map();
@@ -62,16 +47,21 @@ class EulerianPath {
             startNode = this.graph.keys().next().value;
         }
 
-        console.log("Start node:", startNode);
         this.dfs(startNode);
-
-        this.path.reverse();
 
         if (this.path.length !== [...outDegree.values()].reduce((acc, val) => acc + val, 0) + 1) {
             return null; // No Eulerian path
         }
 
         return this.path;
+    }
+
+    dfs(node) {
+        while (this.graph.has(node) && this.graph.get(node).length > 0) {
+            const nextNode = this.graph.get(node).shift();
+            this.dfs(nextNode);
+        }
+        this.path.push(node);
     }
 }
 
@@ -84,8 +74,8 @@ function reconstruct() {
         return;
     }
 
-    var gEnzymeFragments = gEnzymeInput.split(", ").map(fragment => fragment.split(" "));
-    var ucEnzymeFragments = ucEnzymeInput.split(", ").map(fragment => fragment.split(" "));
+    var gEnzymeFragments = gEnzymeInput.split(", ");
+    var ucEnzymeFragments = ucEnzymeInput.split(", ");
 
     var reconstructedRNA = reconstructRNA(gEnzymeFragments, ucEnzymeFragments);
 
@@ -97,37 +87,26 @@ function reconstruct() {
     }
 }
 
-
 function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
     const eulerianPathFinder = new EulerianPath();
 
     // Constructing the multigraph
     G_enzyme_fragments.forEach(fragment => {
-        if (typeof fragment === 'string' || fragment instanceof String) {
-            const bases = fragment.split(' ');
-            for (let i = 0; i < bases.length - 1; i++) {
-                eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
-            }
-        } else {
-            console.error('fragment is not a string:', fragment);
+        for (let i = 0; i < fragment.length - 1; i++) {
+            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
         }
     });
 
     UC_enzyme_fragments.forEach(fragment => {
-        if (typeof fragment === 'string' || fragment instanceof String) {
-            const bases = fragment.split(' ');
-            for (let i = 0; i < bases.length - 1; i++) {
-                eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
-            }
-        } else {
-            console.error('fragment is not a string:', fragment);
+        for (let i = 0; i < fragment.length - 1; i++) {
+            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
         }
     });
 
     // Finding Eulerian path and reconstructing the sequence
     const eulerianPath = eulerianPathFinder.findEulerianPath();
     if (eulerianPath) {
-        const rnaSequence = eulerianPath.join('');
+        const rnaSequence = eulerianPath.reverse().join('');
         return rnaSequence;
     } else {
         return "No Eulerian path exists.";
