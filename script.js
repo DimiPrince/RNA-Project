@@ -68,17 +68,24 @@ class EulerianPath {
 }
 
 function reconstruct() {
-    var gEnzymeInput = document.getElementById("gEnzymeInput").value.trim();
-    var ucEnzymeInput = document.getElementById("ucEnzymeInput").value.trim();
+    var gEnzymeInput = document.getElementById("gEnzymeInput").value;
+    var ucEnzymeInput = document.getElementById("ucEnzymeInput").value;
 
-    // Split the input into fragments
-    var gEnzymeFragments = gEnzymeInput.split(", ").map(fragment => fragment.trim().split(' '));
-    var ucEnzymeFragments = ucEnzymeInput.split(", ").map(fragment => fragment.trim().split(' '));
+    if (!gEnzymeInput || !ucEnzymeInput) {
+        alert("Please enter both G-enzyme and U.C-enzyme fragments.");
+        return;
+    }
 
-    // Reconstruct RNA sequence
+    var gEnzymeFragments = gEnzymeInput.split(", ");
+    var ucEnzymeFragments = ucEnzymeInput.split(", ");
+
+    if (gEnzymeFragments.some(fragment => typeof fragment !== 'string') || ucEnzymeFragments.some(fragment => typeof fragment !== 'string')) {
+        alert("Please enter fragments separated by commas and spaces.");
+        return;
+    }
+
     var reconstructedRNA = reconstructRNA(gEnzymeFragments, ucEnzymeFragments);
 
-    // Display the result
     var outputDiv = document.getElementById("output");
     if (reconstructedRNA !== "No Eulerian path exists.") {
         outputDiv.innerHTML = "Reconstructed RNA sequence: " + reconstructedRNA;
