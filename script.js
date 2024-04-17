@@ -65,33 +65,6 @@ class EulerianPath {
     }
 }
 
-function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
-    const eulerianPathFinder = new EulerianPath();
-
-    // Add edges from G-enzyme fragments
-    G_enzyme_fragments.forEach(fragment => {
-        for (let i = 0; i < fragment.length - 1; i++) {
-            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
-        }
-    });
-
-    // Add edges from U.C-enzyme fragments
-    UC_enzyme_fragments.forEach(fragment => {
-        for (let i = 0; i < fragment.length - 1; i++) {
-            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
-        }
-    });
-
-    // Find Eulerian path and reconstruct RNA sequence
-    const eulerianPath = eulerianPathFinder.findEulerianPath();
-    if (eulerianPath) {
-        const rnaSequence = eulerianPath.reverse().join('');
-        return rnaSequence;
-    } else {
-        return "No Eulerian path exists.";
-    }
-}
-
 function reconstruct() {
     var gEnzymeInput = document.getElementById("gEnzymeInput").value;
     var ucEnzymeInput = document.getElementById("ucEnzymeInput").value;
@@ -113,3 +86,32 @@ function reconstruct() {
         outputDiv.innerHTML = "Error: No Eulerian path exists. Please check your input.";
     }
 }
+
+function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
+    const eulerianPathFinder = new EulerianPath();
+
+    // Constructing the multigraph
+    G_enzyme_fragments.forEach(fragment => {
+        for (let i = 0; i < fragment.length - 1; i++) {
+            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
+        }
+    });
+
+    UC_enzyme_fragments.forEach(fragment => {
+        for (let i = 0; i < fragment.length - 1; i++) {
+            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
+        }
+    });
+
+    // Finding Eulerian path and reconstructing the sequence
+    const eulerianPath = eulerianPathFinder.findEulerianPath();
+    if (eulerianPath) {
+        const rnaSequence = eulerianPath.reverse().join('');
+        return rnaSequence;
+    } else {
+        return "No Eulerian path exists.";
+    }
+}
+
+// Call the reconstruct function when the "Reconstruct" button is clicked
+document.getElementById("reconstructButton").addEventListener("click", reconstruct);
