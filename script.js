@@ -112,6 +112,3 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
         return "No Eulerian path exists.";
     }
 }
-
-// Call the reconstruct function when the "Reconstruct" button is clicked
-document.getElementById("reconstructButton").addEventListener("click", reconstruct);
