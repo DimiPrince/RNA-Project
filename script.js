@@ -74,8 +74,8 @@ function reconstruct() {
         return;
     }
 
-    var gEnzymeFragments = gEnzymeInput.split(", ");
-    var ucEnzymeFragments = ucEnzymeInput.split(", ");
+    var gEnzymeFragments = gEnzymeInput.split(", ").map(fragment => fragment.split(""));
+    var ucEnzymeFragments = ucEnzymeInput.split(", ").map(fragment => fragment.split(""));
 
     var reconstructedRNA = reconstructRNA(gEnzymeFragments, ucEnzymeFragments);
 
