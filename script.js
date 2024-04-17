@@ -92,14 +92,16 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
 
     // Constructing the multigraph
     G_enzyme_fragments.forEach(fragment => {
-        for (let i = 0; i < fragment.length - 1; i++) {
-            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
+        const bases = fragment.split(' ');
+        for (let i = 0; i < bases.length - 1; i++) {
+            eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
         }
     });
 
     UC_enzyme_fragments.forEach(fragment => {
-        for (let i = 0; i < fragment.length - 1; i++) {
-            eulerianPathFinder.addEdge(fragment[i], fragment[i + 1]);
+        const bases = fragment.split(' ');
+        for (let i = 0; i < bases.length - 1; i++) {
+            eulerianPathFinder.addEdge(bases[i], bases[i + 1]);
         }
     });
 
