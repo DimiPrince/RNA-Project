@@ -93,20 +93,25 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
     // Constructing the multigraph
     G_enzyme_fragments.forEach(fragment => {
         const formattedFragment = fragment.join(""); // Joining the array to form a single string
+        console.log("Adding G-enzyme fragment:", formattedFragment);
         for (let i = 0; i < formattedFragment.length - 1; i++) {
             eulerianPathFinder.addEdge(formattedFragment[i], formattedFragment[i + 1]);
+            console.log("Adding edge:", formattedFragment[i], "->", formattedFragment[i + 1]);
         }
     });
 
     UC_enzyme_fragments.forEach(fragment => {
         const formattedFragment = fragment.join(""); // Joining the array to form a single string
+        console.log("Adding UC-enzyme fragment:", formattedFragment);
         for (let i = 0; i < formattedFragment.length - 1; i++) {
             eulerianPathFinder.addEdge(formattedFragment[i], formattedFragment[i + 1]);
+            console.log("Adding edge:", formattedFragment[i], "->", formattedFragment[i + 1]);
         }
     });
 
     // Finding Eulerian path and reconstructing the sequence
     const eulerianPath = eulerianPathFinder.findEulerianPath();
+    console.log("Eulerian path:", eulerianPath);
     if (eulerianPath) {
         const rnaSequence = eulerianPath.reverse().join('');
         return rnaSequence;
@@ -114,4 +119,5 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
         return "No Eulerian path exists.";
     }
 }
+
 
