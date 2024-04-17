@@ -12,6 +12,11 @@ class EulerianPath {
     }
 
     dfs(node) {
+        if (!this.graph.has(node)) {
+            console.error('Node does not exist in the graph:', node);
+            return;
+        }
+    
         while (this.graph.get(node).length > 0) {
             const nextNode = this.graph.get(node).shift();
             this.dfs(nextNode);
