@@ -2,15 +2,22 @@ class EulerianPath {
     constructor() {
         this.graph = new Map();
         this.path = [];
+        this.nodes = new Set();
+        this.edges = [];
     }
+//added nodes and edges to be displayed in the graph
 
     addEdge(src, dest) {
         if (!this.graph.has(src)) {
             this.graph.set(src, []);
         }
         this.graph.get(src).push(dest);
+        this.nodes.add(src);
+        this.nodes.add(dest);
+        this.edges.push({from: src, to: dest});
     }
 
+    //algorithm to find the Eulerian path, thank you for Google
     findEulerianPath() {
         const inDegree = new Map();
         const outDegree = new Map();
@@ -64,6 +71,7 @@ class EulerianPath {
         this.path.push(node);
     }
 }
+//dfs algorithm implemented
 
 function reconstruct() {
     var gEnzymeInput = document.getElementById("gEnzymeInput").value;
@@ -91,6 +99,7 @@ function reconstruct() {
     outputDiv.innerHTML += "<strong>Interior extended bases from applying enzymes above:</strong> " + interiorExtendedBases + "<br><br>";
     outputDiv.innerHTML += "<strong>All non-single fragments from applying enzymes above:</strong> " + nonSingleFragments + "<br><br>";
 }
+//showing out put results when putton clicked
 
 function applyEnzyme(enzymeFragments, enzymeType) {
     // Function to apply the specified enzyme to the given fragments
@@ -179,6 +188,7 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
     // Finding Eulerian path and reconstructing the sequence
     const eulerianPath = eulerianPathFinder.findEulerianPath();
     console.log("Eulerian path:", eulerianPath);
+    drawGraph(eulerianPathFinder.nodes, eulerianPathFinder.edges);
     if (eulerianPath) {
         const rnaSequence = eulerianPath.reverse().join('');
         return rnaSequence;
@@ -186,3 +196,21 @@ function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
         return "No Eulerian path exists.";
     }
 }
+
+function drawGraph(nodes, edges) {
+    // create an array with nodes
+    var nodesArray = Array.from(nodes).map((node, index) => ({id: index, label: node}));
+
+    // create an array with edges
+    var edgesArray = edges.map(edge => ({from: Array.from(nodes).indexOf(edge.from), to: Array.from(nodes).indexOf(edge.to)}));
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+    var data = {
+        nodes: nodesArray,
+        edges: edgesArray
+    };
+    var options = {};
+    var network = new vis.Network(container, data, options);
+}
+//code to display graph, vis library worked best for me

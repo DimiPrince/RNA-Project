@@ -6,17 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RNA Reconstruction</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 
 <body>
     <div class="container">
         <h1>RNA Reconstruction</h1>
-        <div>
-            <textarea id="gEnzymeInput" placeholder="Enter G-enzyme fragments here... (separated by spaces) e.g. AUCG AUG G CU ACUAUACG"></textarea>
-            <textarea id="ucEnzymeInput" placeholder="Enter U.C-enzyme fragments here... (separated by spaces) e.g. GGAC U AU GAU C U AC GC AU"></textarea>
-        </div>
-        <button onclick="reconstruct()">Reconstruct</button>
-        <div id="output"></div>
         <div id="instructions">
             <h2>Instructions:</h2>
             <p>Please input the RNA fragments in each textbox, separated by spaces. Use the following format:</p>
@@ -25,6 +20,17 @@
             <h2>Sample Input:</h2>
             <p><strong>G-enzyme:</strong> AUCG AUG G CU ACUAUACG</p>
             <p><strong>U.C-enzyme:</strong> GGAC U AU GAU C U AC GC AU</p>
+        </div>
+        <div>
+            <textarea id="gEnzymeInput" placeholder="Enter G-enzyme fragments here... (separated by spaces) e.g. AUCG AUG G CU ACUAUACG"></textarea>
+            <textarea id="ucEnzymeInput" placeholder="Enter U.C-enzyme fragments here... (separated by spaces) e.g. GGAC U AU GAU C U AC GC AU"></textarea>
+        </div>
+        <button onclick="reconstruct()">Reconstruct</button>
+        <div id="mynetwork" style="width: 600px; height: 300px;"></div>
+        <div id="output"></div>
+        <div id="author">
+            <p>Created by: Dimitry Principale</p>
+            <p>Class: Independent Study(CSCI 393)</p>
         </div>
     </div>
 
