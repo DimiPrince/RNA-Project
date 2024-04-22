@@ -12,11 +12,20 @@
     <div class="container">
         <h1>RNA Reconstruction</h1>
         <div>
-            <textarea id="gEnzymeInput" placeholder="Enter G-enzyme fragments here..." rows="5"></textarea>
-            <textarea id="ucEnzymeInput" placeholder="Enter U.C-enzyme fragments here..." rows="5"></textarea>
+            <textarea id="gEnzymeInput" placeholder="Enter G-enzyme fragments here... (separated by spaces) e.g. AUCG AUG G CU ACUAUACG"></textarea>
+            <textarea id="ucEnzymeInput" placeholder="Enter U.C-enzyme fragments here... (separated by spaces) e.g. GGAC U AU GAU C U AC GC AU"></textarea>
         </div>
         <button onclick="reconstruct()">Reconstruct</button>
         <div id="output"></div>
+        <div id="instructions">
+            <h2>Instructions:</h2>
+            <p>Please input the RNA fragments in each textbox, separated by spaces. Use the following format:</p>
+            <p><strong>For G-enzyme fragments:</strong> AUCG AUG G CU ACUAUACG</p>
+            <p><strong>For U.C-enzyme fragments:</strong> GGAC U AU GAU C U AC GC AU</p>
+            <h2>Sample Input:</h2>
+            <p><strong>G-enzyme:</strong> AUCG AUG G CU ACUAUACG</p>
+            <p><strong>U.C-enzyme:</strong> GGAC U AU GAU C U AC GC AU</p>
+        </div>
     </div>
 
     <script src="script.js"></script>

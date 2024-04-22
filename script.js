@@ -78,41 +78,110 @@ function reconstruct() {
     var ucEnzymeFragments = ucEnzymeInput.split(", ").map(fragment => fragment.split(""));
 
     var reconstructedRNA = reconstructRNA(gEnzymeFragments, ucEnzymeFragments);
+    var ucEnzymeResult = applyEnzyme(gEnzymeFragments, 'U.C');
+    var gEnzymeResult = applyEnzyme(ucEnzymeFragments, 'G');
+    var singleFragments = getSingleFragments(gEnzymeFragments, ucEnzymeFragments);
+    var interiorExtendedBases = getInteriorExtendedBases(gEnzymeFragments, ucEnzymeFragments);
+    var nonSingleFragments = getNonSingleFragments(gEnzymeFragments, ucEnzymeFragments);
 
     var outputDiv = document.getElementById("output");
-    outputDiv.innerHTML = reconstructedRNA;
+    outputDiv.innerHTML = "<strong>Reconstructed RNA sequence:</strong> " + reconstructedRNA + "<br><br>";
+    outputDiv.innerHTML += "<strong>Result of applying U.C-enzyme to G-enzyme input:</strong> " + ucEnzymeResult + "<br><br>";
+    outputDiv.innerHTML += "<strong>Result of applying G-enzyme to U.C-enzyme input:</strong> " + gEnzymeResult + "<br><br>";
+    outputDiv.innerHTML += "<strong>Interior extended bases from applying enzymes above:</strong> " + interiorExtendedBases + "<br><br>";
+    outputDiv.innerHTML += "<strong>All non-single fragments from applying enzymes above:</strong> " + nonSingleFragments + "<br><br>";
+}
+
+function applyEnzyme(enzymeFragments, enzymeType) {
+    // Function to apply the specified enzyme to the given fragments
+    var enzymeResult = "";
+    enzymeFragments.forEach(fragment => {
+        const formattedFragment = fragment.join(""); // Joining the array to form a single string
+        enzymeResult += formattedFragment + "/" + enzymeType + ", ";
+    });
+    return enzymeResult.slice(0, -2); // Remove the last comma and space
+}
+
+function getSingleFragments(gEnzymeFragments, ucEnzymeFragments) {
+    // Function to get single fragments from applying the enzymes
+    var singleFragments = [];
+    gEnzymeFragments.forEach(fragment => {
+        if (fragment.length === 1) {
+            singleFragments.push(fragment.join(""));
+        }
+    });
+    ucEnzymeFragments.forEach(fragment => {
+        if (fragment.length === 1) {
+            singleFragments.push(fragment.join(""));
+        }
+    });
+    return singleFragments.join(" ");
+}
+
+function getInteriorExtendedBases(gEnzymeFragments, ucEnzymeFragments) {
+    // Function to get interior extended bases from applying the enzymes
+    var interiorExtendedBases = new Set();
+    gEnzymeFragments.forEach(fragment => {
+        if (fragment.length > 1) {
+            for (let i = 1; i < fragment.length - 1; i++) {
+                interiorExtendedBases.add(fragment[i]);
+            }
+        }
+    });
+    ucEnzymeFragments.forEach(fragment => {
+        if (fragment.length > 1) {
+            for (let i = 1; i < fragment.length - 1; i++) {
+                interiorExtendedBases.add(fragment[i]);
+            }
+        }
+    });
+    return Array.from(interiorExtendedBases).join(" ");
+}
+
+function getNonSingleFragments(gEnzymeFragments, ucEnzymeFragments) {
+    // Function to get non-single fragments from applying the enzymes
+    var nonSingleFragments = [];
+    gEnzymeFragments.forEach(fragment => {
+        if (fragment.length > 1) {
+            nonSingleFragments.push(fragment.join(""));
+        }
+    });
+    ucEnzymeFragments.forEach(fragment => {
+        if (fragment.length > 1) {
+            nonSingleFragments.push(fragment.join(""));
+        }
+    });
+    return nonSingleFragments.join(" ");
 }
 
 function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
     const eulerianPathFinder = new EulerianPath();
-    let output = ""; // Initialize output string
 
     // Constructing the multigraph
     G_enzyme_fragments.forEach(fragment => {
         const formattedFragment = fragment.join(""); // Joining the array to form a single string
-        output += "Adding G-enzyme fragment: " + formattedFragment + "<br>"; // Add log to output
+        console.log("Adding G-enzyme fragment:", formattedFragment);
         for (let i = 0; i < formattedFragment.length - 1; i++) {
             eulerianPathFinder.addEdge(formattedFragment[i], formattedFragment[i + 1]);
-            output += "Adding edge: " + formattedFragment[i] + " -> " + formattedFragment[i + 1] + "<br>"; // Add log to output
+            console.log("Adding edge:", formattedFragment[i], "->", formattedFragment[i + 1]);
         }
     });
 
     UC_enzyme_fragments.forEach(fragment => {
         const formattedFragment = fragment.join(""); // Joining the array to form a single string
-        output += "Adding U.C-enzyme fragment: " + formattedFragment + "<br>"; // Add log to output
+        console.log("Adding UC-enzyme fragment:", formattedFragment);
         for (let i = 0; i < formattedFragment.length - 1; i++) {
             eulerianPathFinder.addEdge(formattedFragment[i], formattedFragment[i + 1]);
-            output += "Adding edge: " + formattedFragment[i] + " -> " + formattedFragment[i + 1] + "<br>"; // Add log to output
+            console.log("Adding edge:", formattedFragment[i], "->", formattedFragment[i + 1]);
         }
     });
 
     // Finding Eulerian path and reconstructing the sequence
     const eulerianPath = eulerianPathFinder.findEulerianPath();
+    console.log("Eulerian path:", eulerianPath);
     if (eulerianPath) {
         const rnaSequence = eulerianPath.reverse().join('');
-        output += "Eulerian path: " + eulerianPath.join(" -> ") + "<br>"; // Add Eulerian path to output
-        output += "Reconstructed RNA sequence: " + rnaSequence; // Add reconstructed RNA sequence to output
-        return output;
+        return rnaSequence;
     } else {
         return "No Eulerian path exists.";
     }
