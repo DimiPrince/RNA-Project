@@ -80,44 +80,40 @@ function reconstruct() {
     var reconstructedRNA = reconstructRNA(gEnzymeFragments, ucEnzymeFragments);
 
     var outputDiv = document.getElementById("output");
-    if (reconstructedRNA !== "No Eulerian path exists.") {
-        outputDiv.innerHTML = "Reconstructed RNA sequence: " + reconstructedRNA;
-    } else {
-        outputDiv.innerHTML = "Error: No Eulerian path exists. Please check your input.";
-    }
+    outputDiv.innerHTML = reconstructedRNA;
 }
 
 function reconstructRNA(G_enzyme_fragments, UC_enzyme_fragments) {
     const eulerianPathFinder = new EulerianPath();
+    let output = ""; // Initialize output string
 
     // Constructing the multigraph
     G_enzyme_fragments.forEach(fragment => {
         const formattedFragment = fragment.join(""); // Joining the array to form a single string
-        console.log("Adding G-enzyme fragment:", formattedFragment);
+        output += "Adding G-enzyme fragment: " + formattedFragment + "<br>"; // Add log to output
         for (let i = 0; i < formattedFragment.length - 1; i++) {
             eulerianPathFinder.addEdge(formattedFragment[i], formattedFragment[i + 1]);
-            console.log("Adding edge:", formattedFragment[i], "->", formattedFragment[i + 1]);
+            output += "Adding edge: " + formattedFragment[i] + " -> " + formattedFragment[i + 1] + "<br>"; // Add log to output
         }
     });
 
     UC_enzyme_fragments.forEach(fragment => {
         const formattedFragment = fragment.join(""); // Joining the array to form a single string
-        console.log("Adding UC-enzyme fragment:", formattedFragment);
+        output += "Adding U.C-enzyme fragment: " + formattedFragment + "<br>"; // Add log to output
         for (let i = 0; i < formattedFragment.length - 1; i++) {
             eulerianPathFinder.addEdge(formattedFragment[i], formattedFragment[i + 1]);
-            console.log("Adding edge:", formattedFragment[i], "->", formattedFragment[i + 1]);
+            output += "Adding edge: " + formattedFragment[i] + " -> " + formattedFragment[i + 1] + "<br>"; // Add log to output
         }
     });
 
     // Finding Eulerian path and reconstructing the sequence
     const eulerianPath = eulerianPathFinder.findEulerianPath();
-    console.log("Eulerian path:", eulerianPath);
     if (eulerianPath) {
         const rnaSequence = eulerianPath.reverse().join('');
-        return rnaSequence;
+        output += "Eulerian path: " + eulerianPath.join(" -> ") + "<br>"; // Add Eulerian path to output
+        output += "Reconstructed RNA sequence: " + rnaSequence; // Add reconstructed RNA sequence to output
+        return output;
     } else {
         return "No Eulerian path exists.";
     }
 }
-
-
